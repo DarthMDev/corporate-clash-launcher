@@ -4,7 +4,7 @@
         <img class="newsBackground" src="../assets/art/misc/news.png"/>
         <div class="newsDiv">
             <ul class="newsUl">
-                <li v-for="(article, index) in articles">
+                <li v-for="(article, index) in articles" v-bind:key="article.id">
                     <h3 class="articleHeader" v-text="article.title" @click="articleClicked(article.id)"/>
                     <p><article-date :date="article.posted" /></p>
                     <p v-text="article.summary"/>
