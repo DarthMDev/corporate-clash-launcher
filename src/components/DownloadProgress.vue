@@ -1,21 +1,54 @@
 <template>
-    <div class="progressPos" :hidden="this.progress <= 0 || this.progress >= 100">
-        <div class="progress">
-            <div id="progressBar" class="progressBar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
-                 :style="{'width': `${this.progress}%`}">
+    <div>
+        <p class="statusText" v-text="statustext" />
+        <div class="progressPos" :hidden="progress <= 0 || progress >= 100">
+            <div class="progress">
+                <div id="progressBar" class="progressBar"
+                     :style="{'width': `${progress}%`}">
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
+    import {ipcRenderer} from 'electron-better-ipc';
+    import {AxiosResponse} from 'axios'
+    import {remote} from "electron";
+
     export default {
         name: 'DownloadProgress',
         computed: {
-            progress(): Number {
-                // @ts-ignore
-                return this.$store.state.progressBar;
+        },
+        data() {
+            return {
+                statustext: "Getting ready...",
+                progress: -1,
             }
+        },
+        methods: {
+        },
+        mounted(): void {
+            // @ts-ignore
+            ipcRenderer.callMain("populate-manifest").then(() => {
+                // @ts-ignore
+                this.statustext = "Ready to go!";
+            });
+            // @ts-ignore
+            ipcRenderer.answerMain("set-status", async (text: string) => {
+                // @ts-ignore
+                this.statustext = text;
+                return true;
+            });
+            // @ts-ignore
+            ipcRenderer.answerMain("update-progress", async (progress: number) => {
+                // @ts-ignore
+                this.statustext = `Downloading: ${progress}%`;
+                // @ts-ignore
+                this.progress = progress;
+                remote.getCurrentWindow().setProgressBar(progress / 100);
+                return true;
+            });
         }
     }
 </script>
@@ -47,5 +80,18 @@
         position: absolute;
         right: 210px;
         bottom: 157px;
+    }
+
+    .statusText {
+        position: absolute;
+        font-size: 15pt;
+        text-align: right;
+        bottom: 130px;
+        right: 210px;
+        z-index: 1;
+        font-family: 'Impress BT', Fallback, sans-serif;
+        -webkit-app-region: no-drag;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
     }
 </style>

@@ -9,13 +9,21 @@
             <input id="password" class="loginPasswordText" type="password"/>
             <img class="loginPasswordImage" src="../assets/art/misc/field_user.png"/>
         </div>
-        <div class="playButton" />
+        <div class="playButton" @click="playClicked" />
     </div>
 </template>
 
 <script lang="ts">
+    import {ipcRenderer} from 'electron-better-ipc';
     export default {
         name: 'LoginButtons',
+        methods: {
+            playClicked() {
+                ipcRenderer.callMain("check-download").then(() => {
+                    // TODO: login logic
+                });
+            }
+        }
     }
 </script>
 

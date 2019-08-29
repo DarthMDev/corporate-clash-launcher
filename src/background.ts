@@ -1,6 +1,11 @@
+import {ipcMain} from "electron-better-ipc";
 import {app, BrowserWindow, protocol} from 'electron'
 import {createProtocol, installVueDevtools} from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path';
+import {Downloader} from "./downloader";
+import {AxiosRequestConfig} from "axios";
+import Axios from "./axios";
+import {baseDir} from "./constantsMain";
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -29,7 +34,7 @@ function createWindow() {
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
         // Load the url of the dev server if in development mode
-        win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
+        win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
         if (!process.env.IS_TEST) win.webContents.openDevTools({mode: "detach"})
     } else {
         createProtocol('app');
@@ -47,7 +52,8 @@ app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
+        process.exit(0);
     }
 });
 
@@ -88,3 +94,37 @@ if (isDevelopment) {
         })
     }
 }
+
+// TODO: realms
+let downloader = new Downloader("production");
+downloader.setBaseDirectory(baseDir);
+// Begin download handler
+
+// @ts-ignore
+ipcMain.answerRenderer('get-axios', async (uri: string, config: AxiosRequestConfig | null = null) => {
+    if (config == null) {
+        return await Axios.get(uri)
+    }
+    return await Axios.get(uri, config)
+});
+
+ipcMain.answerRenderer('populate-manifest', async () => {
+    await downloader.populateManifest();
+    return true
+});
+
+ipcMain.answerRenderer('check-download', async () => {
+    if (win) {
+        ipcMain.callRenderer(win, "set-status", "Checking files...");
+    }
+    return await downloader.downloadToFolder(async (progress) => {
+        // @ts-ignore
+        if (win) {
+            ipcMain.callRenderer(win, 'update-progress', progress).catch(() => {}).then(() => {});
+        }
+    }, () => {
+        if (win) {
+            ipcMain.callRenderer(win, "set-status", "Finished!");
+        }
+    });
+});

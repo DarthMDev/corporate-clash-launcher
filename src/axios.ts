@@ -1,14 +1,16 @@
 import Axios from "axios";
-let nodeAdapter = require('axios/lib/adapters/http');
-import {remote} from 'electron';
+import {app} from 'electron';
 
-Axios.defaults.adapter = nodeAdapter;
+let headers: { [name: string]: string } = {};
+
+// we can only set user-agent in main process due to axios
+headers["User-Agent"] = `Mozilla/5.0 CorporateClashLauncher/${app.getVersion()}`;
+
+
 
 export default Axios.create({
-    headers: {
-        'User-Agent': `Mozilla/5.0 CorporateClashLauncher/${remote.app.getVersion()}`
-    },
+    headers: headers,
     timeout: 10000,
     baseURL: 'https://corporateclash.net/api/',
-    adapter: nodeAdapter,
 })
+

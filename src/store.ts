@@ -14,11 +14,11 @@ export default new Vuex.Store({
     },
     mutations: {
         setProgressBar(state, n) {
+            state.progressBar = n;
             remote.getCurrentWindow().setProgressBar(n / 100);
             if (n >= 100 || n <= 0) {
                 remote.getCurrentWindow().setProgressBar(-1);
             }
-            state.progressBar = n;
         }
     },
     actions: {}
