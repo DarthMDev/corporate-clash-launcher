@@ -2,12 +2,11 @@
 <template>
     <div>
         <div class="loginUsername">
-            <input id="username" class="loginUsernameText" type="text"/>
-            <img class="loginUsernameImage" src="../assets/art/misc/field_user.png"/>
-        </div>
-        <div class="loginPassword">
-            <input id="password" class="loginPasswordText" type="password"/>
-            <img class="loginPasswordImage" src="../assets/art/misc/field_user.png"/>
+            <select class="loginDropdown">
+                <option></option>
+                <!-- TODO: list accounts -->
+                <!-- TODO: Dedicated buttons for removing and adding accounts -->
+            </select>
         </div>
         <div class="playButton" @click="playClicked" />
     </div>
@@ -15,13 +14,14 @@
 
 <script lang="ts">
     import {ipcRenderer} from 'electron-better-ipc';
+    import {Accounts} from '@/authentication'
     export default {
         name: 'LoginButtons',
         methods: {
             playClicked() {
-                ipcRenderer.callMain("check-download").then(() => {
-                    // TODO: login logic
-                });
+                //ipcRenderer.callMain("check-download").then(() => {
+                //    // TODO: login logic
+                //});
             }
         }
     }
@@ -78,6 +78,17 @@
         z-index: 2;
         font-family: 'Impress BT', Fallback, sans-serif;
     }
+
+    .loginDropdown {
+        position: absolute;
+        bottom: 245px;
+        right: 90px;
+        width: 172px;
+        z-index: 2;
+        user-select: none;
+        -webkit-app-region: no-drag;
+    }
+
 
     .loginPassword {
         position: relative

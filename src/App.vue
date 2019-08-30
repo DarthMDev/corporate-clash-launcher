@@ -1,7 +1,7 @@
 <!--suppress CheckEmptyScriptTag -->
 <template>
     <div id="app">
-        <img class="bg-img" alt="background image" src="./assets/art/flat.png">
+        <img class="bg-img" alt="background image" src="./assets/art/flat_only_username.png">
         <window-buttons/>
         <login-buttons/>
         <download-progress/>
