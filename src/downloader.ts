@@ -161,6 +161,7 @@ export class Downloader {
     private async downloadFile(file: ManifestFile, addToProgress: _CallbackProgressDelta, finished: _CallbackProgressFinished): Promise<void> {
         let fullPath = this.fullPathToFile(file);
 
+        // md5String is basically a salt for the GH filenames
         let md5String = 'TTCC-RELEASE-OBJECT-';
         let ghName = crypto.createHash('md5').update(md5String + file.file).digest('hex');
 

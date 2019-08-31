@@ -1,7 +1,8 @@
 <!--suppress CheckEmptyScriptTag -->
 <template>
     <div id="app">
-        <img class="bg-img" alt="background image" src="./assets/art/flat_only_username.png">
+        <img v-if="useFlat2" class="bg-img" alt="background image" src="./assets/art/flat.png">
+        <img v-else class="bg-img" alt="background image" src="./assets/art/flat_only_username.png">
         <window-buttons/>
         <login-buttons/>
         <download-progress/>
@@ -25,6 +26,21 @@
             DownloadProgress,
             LoginButtons,
             WindowButtons
+        },
+        data() {
+            return {
+                useFlat2: false
+            }
+        },
+        methods: {
+            useOldBackground() {
+                // @ts-ignore
+                this.useFlat2 = true;
+            },
+            useRegularBackground() {
+                // @ts-ignore
+                this.useFlat2 = true;
+            }
         }
     }
 </script>

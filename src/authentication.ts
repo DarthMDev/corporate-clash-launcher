@@ -1,4 +1,12 @@
 import ElectronStore from "electron-store";
+import Axios from "./axios";
+
+interface loginResponse {
+    status: boolean,
+    toonstep: boolean,
+    message: string,
+    token: string,
+}
 
 class Account {
     username = '';
@@ -6,6 +14,12 @@ class Account {
     constructor(username: string, token: string) {
         this.username = username;
         this.token = token;
+    }
+
+    async login(): Promise<loginResponse> {
+        return Axios.post('launcher/v1/login', {}, {headers: {"Authorization": `Bearer ${this.token}`}}).then(res => {
+            return res.data;
+        })
     }
 }
 
@@ -28,11 +42,16 @@ export class Accounts {
         this.store.set('accounts', this.accountList);
     }
 
-    getAccountByUsername(username: string) {
+    getAccountByUsername(username: string): Account {
         return this.accountList.filter(account => account.username == username)[0];
     }
 
-    getAccountUsernames() {
+    removeAccountByUsername(username: string) {
+        this.accountList = this.accountList.filter(account => account.username !== username);
+        this._saveAccounts();
+    }
+
+    getAccountUsernames(): string[] {
         return this.accountList.flatMap(account => account.username);
     }
 
@@ -41,3 +60,4 @@ export class Accounts {
         this._saveAccounts();
     }
 }
+export default new Accounts();

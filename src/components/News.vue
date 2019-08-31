@@ -19,6 +19,7 @@
     import {ipcRenderer} from 'electron-better-ipc';
     import {shell} from 'electron';
     import ArticleDate from "@/components/ArticleDate.vue"
+    import Axios from '@/axios'
 
     export default {
         name: 'News',
@@ -34,7 +35,7 @@
             }
         },
         mounted() {
-            ipcRenderer.callMain('get-axios', 'v1/launcher/news').then(res => {
+            Axios.get('v1/launcher/news').then(res => {
                 // @ts-ignore
                 this.articles = res.data;
             })

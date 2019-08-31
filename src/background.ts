@@ -1,13 +1,17 @@
+const isDevelopment = process.env.NODE_ENV !== 'production';
+if (!isDevelopment) {
+    require("@sentry/node").init({ dsn: 'https://6214261e7b08411b89ea13ecf3f864a0@sentry.io/1547181' });
+}
+
 import {ipcMain} from "electron-better-ipc";
 import {app, BrowserWindow, protocol} from 'electron'
 import {createProtocol, installVueDevtools} from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path';
 import {Downloader} from "./downloader";
 import {AxiosRequestConfig} from "axios";
-import Axios from "./axios";
 import {baseDir} from "./constantsMain";
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+import Axios from "./axios";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -99,14 +103,6 @@ if (isDevelopment) {
 let downloader = new Downloader("production");
 downloader.setBaseDirectory(baseDir);
 // Begin download handler
-
-// @ts-ignore
-ipcMain.answerRenderer('get-axios', async (uri: string, config: AxiosRequestConfig | null = null) => {
-    if (config == null) {
-        return await Axios.get(uri)
-    }
-    return await Axios.get(uri, config)
-});
 
 ipcMain.answerRenderer('populate-manifest', async () => {
     await downloader.populateManifest();
