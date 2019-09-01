@@ -29,9 +29,5 @@ jobs:
       - run: npm run electron:build
       - uses: actions/upload-artifact@master
         with:
-          name: dist_electron_mac_and_win-${{ matrix.node }}
-          path: dist_electron
-      - uses: actions/upload-artifact@master
-        with:
           name: dist_electron-${{ matrix.node }}-${{ matrix.os }}
           path: dist_electron
