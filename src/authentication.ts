@@ -11,9 +11,12 @@ interface loginResponse {
 class Account {
     username = '';
     token = '';
-    constructor(username: string, token: string) {
+    friendly = '';
+
+    constructor(username: string, token: string, friendly: string = '') {
         this.username = username;
         this.token = token;
+        this.friendly = friendly;
     }
 
     async login(): Promise<loginResponse> {
@@ -55,7 +58,7 @@ export class Accounts {
         return this.accountList.flatMap(account => account.username);
     }
 
-    addAccount(username: string, token: string) {
+    addAccount(username: string, token: string, friendly: string) {
         this.accountList.push(new Account(username, token));
         this._saveAccounts();
     }

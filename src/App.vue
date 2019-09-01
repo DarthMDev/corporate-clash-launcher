@@ -1,7 +1,7 @@
 <!--suppress CheckEmptyScriptTag -->
 <template>
     <div id="app">
-        <img v-if="useFlat2" class="bg-img" alt="background image" src="./assets/art/flat.png">
+        <img v-if="useFlat2" class="bg-img" alt="background image" src="./assets/art/flat_user_password_friendly.png">
         <img v-else class="bg-img" alt="background image" src="./assets/art/flat_only_username.png">
         <window-buttons/>
         <login-buttons/>
@@ -39,7 +39,7 @@
             },
             useRegularBackground() {
                 // @ts-ignore
-                this.useFlat2 = true;
+                this.useFlat2 = false;
             }
         }
     }

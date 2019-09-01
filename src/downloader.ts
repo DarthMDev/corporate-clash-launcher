@@ -83,7 +83,7 @@ export class Downloader {
         })
     }
 
-    public async downloadToFolder(callbackProgress: CallbackProgress, callbackFinished: CallbackFinished): Promise<number> {
+    public async downloadToFolder(callbackProgress: CallbackProgress): Promise<boolean> {
         let neededFiles: ManifestFile[] = [];
 
         let _files_to_check = this.manifest.files.game.concat(this.manifest.files.resources);
@@ -111,11 +111,10 @@ export class Downloader {
         let filesFinished = 0;
 
         if (neededFiles.length === 0) {
-            callbackFinished();
-            return 0;
+            return true;
         }
-        neededFiles.forEach(async (file: ManifestFile) => {
-            this.downloadFile(file, (progressDelta => {
+        let fnDownload = (file: ManifestFile) => {
+            return this.downloadFile(file, (progressDelta => {
                 _oldprogress = Math.floor((progressDownloaded / progressNeeded) * 100);
 
                 progressDownloaded += progressDelta;
@@ -127,14 +126,11 @@ export class Downloader {
                 if (_oldprogress < _newprogress) {
                     callbackProgress(_newprogress)
                 }
-            }), () => {
-                filesFinished += 1;
-                if (filesFinished == neededFiles.length) {
-                    callbackFinished()
-                }
-            })
+            }))
+        };
+        return Promise.all(neededFiles.map(fnDownload)).then(() => {
+            return true;
         });
-        return neededFiles.length;
     }
 
     private fullPathToFile(file: ManifestFile) {
@@ -158,7 +154,7 @@ export class Downloader {
         return existing_hash !== file.hash;
     }
 
-    private async downloadFile(file: ManifestFile, addToProgress: _CallbackProgressDelta, finished: _CallbackProgressFinished): Promise<void> {
+    private async downloadFile(file: ManifestFile, addToProgress: _CallbackProgressDelta): Promise<boolean> {
         let fullPath = this.fullPathToFile(file);
 
         // md5String is basically a salt for the GH filenames
@@ -172,8 +168,8 @@ export class Downloader {
             lastProgress = progress.percent;
         });
         addToProgress(1 - lastProgress);
-        fsasync.writeFile(fullPath, zlib.inflateSync(resp.body)).then(() => {
-            finished()
+        return fsasync.writeFile(fullPath, zlib.inflateSync(resp.body)).then(() => {
+            return true
         });
     }
 }

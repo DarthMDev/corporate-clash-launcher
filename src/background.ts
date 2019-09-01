@@ -10,6 +10,8 @@ import path from 'path';
 import {Downloader} from "./downloader";
 import {AxiosRequestConfig} from "axios";
 import {baseDir} from "./constantsMain";
+import {spawn} from 'child_process';
+
 
 import Axios from "./axios";
 
@@ -109,6 +111,15 @@ ipcMain.answerRenderer('populate-manifest', async () => {
     return true
 });
 
+ipcMain.answerRenderer('focus', async () => {
+    setTimeout(() => {
+        if (win) {
+            win.focus();
+        }
+    });
+    return true
+});
+
 ipcMain.answerRenderer('check-download', async () => {
     if (win) {
         ipcMain.callRenderer(win, "set-status", "Checking files...");
@@ -118,9 +129,44 @@ ipcMain.answerRenderer('check-download', async () => {
         if (win) {
             ipcMain.callRenderer(win, 'update-progress', progress).catch(() => {}).then(() => {});
         }
-    }, () => {
+    }).then(result => {
         if (win) {
-            ipcMain.callRenderer(win, "set-status", "Finished!");
+            ipcMain.callRenderer(win,"set-status", "Have fun!");
+        }
+        return result;
+    });
+});
+
+// @ts-ignore
+ipcMain.answerRenderer("start-game", async (config: {token: string, hostname: string, minimize: boolean}) => {
+
+    console.log("Should start game");
+    let command;
+    switch (process.platform) {
+        case "win32":
+            command = "CorporateClash.exe";
+            break;
+        case "darwin":
+            command = "Corporate Clash";
+            break;
+        default:
+            command = "Corporate Clash";
+    }
+    let clashProcess = spawn(command, {
+        cwd: baseDir,
+        env: {
+            "TT_GAMESERVER": config.hostname,
+            "TT_PLAYCOOKIE": config.token,
+        },
+        shell: false,
+    });
+    if (win) {
+        config.minimize ? win.minimize() : win.hide();
+    }
+    clashProcess.on('close', (code) => {
+        if (win) {
+            config.minimize ? win.maximize() : win.show();
         }
     });
+    return true;
 });
