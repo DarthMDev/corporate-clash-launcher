@@ -27,3 +27,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm ci
       - run: npm run electron:build
+      - uses: actions/upload-artifact@master
+        with:
+          name: dist_electron
+          path: dist_electron
