@@ -1,6 +1,8 @@
 {
   "name": "corporate-clash-launcher",
   "version": "0.1.0",
+  "description": "Launcher for Toontown: Corporate Clash",
+  "author": "Corporate Clash",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -39,7 +41,9 @@
     "@vue/cli-service": "^3.11.0",
     "@vue/eslint-config-typescript": "^4.0.0",
     "babel-eslint": "^10.0.1",
+    "dotenv": "^8.1.0",
     "electron": "^6.0.4",
+    "electron-notarize": "^0.1.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",

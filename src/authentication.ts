@@ -59,7 +59,7 @@ export class Accounts {
     }
 
     addAccount(username: string, token: string, friendly: string) {
-        this.accountList.push(new Account(username, token));
+        this.accountList.push(new Account(username, token, friendly));
         this._saveAccounts();
     }
 }
