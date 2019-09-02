@@ -19,9 +19,8 @@ module.exports = {
           "gatekeeperAssess": false
         },
         "publish": {
-          "github": {
-            "private": false
-          }
+          "provider": "github",
+          "private": false
         },
       }
     }
