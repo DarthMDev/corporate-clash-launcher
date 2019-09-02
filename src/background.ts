@@ -35,7 +35,7 @@ function createWindow() {
         transparent: true,
         resizable: false,
         maximizable: false,
-        icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
+        icon: path.join(__dirname, 'assets/icons/png/512x512.png'),
         webPreferences: {
             webSecurity: false,
             nodeIntegration: true
