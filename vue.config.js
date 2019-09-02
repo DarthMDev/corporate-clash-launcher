@@ -18,9 +18,11 @@ module.exports = {
           "hardenedRuntime": true,
           "gatekeeperAssess": false
         },
-        "github": {
-          "private": false
-        }
+        "publish": {
+          "github": {
+            "private": false
+          }
+        },
       }
     }
   }
