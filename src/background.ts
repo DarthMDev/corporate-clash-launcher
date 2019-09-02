@@ -3,6 +3,10 @@ if (!isDevelopment) {
     require("@sentry/node").init({ dsn: 'https://6214261e7b08411b89ea13ecf3f864a0@sentry.io/1547181' });
 }
 
+// Auto update check
+import { autoUpdater } from "electron-updater";
+autoUpdater.checkForUpdatesAndNotify();
+
 import {ipcMain} from "electron-better-ipc";
 import {app, BrowserWindow, protocol} from 'electron'
 import {createProtocol, installVueDevtools} from 'vue-cli-plugin-electron-builder/lib'
