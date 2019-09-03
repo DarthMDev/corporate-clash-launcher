@@ -5,8 +5,11 @@ module.exports = {
       builderOptions: {
         "afterSign": "build/notarize.js",
         "appId": "net.corporateclash.mac",
+        "productName": "Toontown: Corporate Clash",
         "copyright": "Copyright © 2019 Corporate Clash",
         "win": {
+          "target": "nsis",
+          "publisherName": "Corporate Clash",
           "publish": ["github"]
         },
         "mac": {
