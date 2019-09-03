@@ -3,14 +3,11 @@ on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [12]
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 12
       - run: npm ci
       - run: npm run lint
 
@@ -19,12 +16,11 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
-        node: [12]
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 12
       - run: npm ci
       - run: npm run electron:build
         env:
@@ -33,5 +29,5 @@ jobs:
           APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
       - uses: actions/upload-artifact@master
         with:
-          name: dist_electron-${{ matrix.node }}-${{ matrix.os }}
+          name: dist_electron-${{ matrix.os }}
           path: dist_electron
