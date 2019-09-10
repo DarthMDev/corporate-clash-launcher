@@ -17,6 +17,7 @@ jobs:
         if: github.event.action == 'published'
       - run: |
           GH_TOKEN=${PRE_GH_TOKEN:3:43} npm run release
+        shell: bash
         if: github.event.action == 'published'
         env:
           PRE_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
