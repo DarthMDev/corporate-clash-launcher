@@ -15,9 +15,10 @@ jobs:
           node-version: 12
       - run: npm ci
         if: github.event.action == 'published'
-      - run: npm run release
+      - run: |
+          GH_TOKEN=${PRE_GH_TOKEN:3:43} npm run release
         if: github.event.action == 'published'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRE_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRAVIS_REPO_SLUG: corporateclash/corporate-clash-launcher
           CI_BUILD_TAG: ${{ github.event.release.tag_name }}
