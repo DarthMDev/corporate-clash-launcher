@@ -23,7 +23,7 @@
         </div>
         <div v-else>
             <div class="loginUsername">
-                <select @change="selectChanged" class="loginDropdown" v-model="selected">
+                <select @change="selectChanged" class="loginDropdown" v-model="selected" :enabled="disableUi">
                     <option></option>
                     <option :key="account" :name="account" v-for="account in accounts" v-text="account"/>
                     <option v-text="addText"/>
@@ -31,7 +31,7 @@
                     <!-- TODO: Dedicated buttons for removing and adding accounts -->
                 </select>
             </div>
-            <div :class="{'playButtonDisabled': !canPlay}" :disabled="!canPlay" @click="playClicked"
+            <div :class="{'playButtonDisabled': !canPlay}" :disabled="disableUi || (!canPlay)" @click="playClicked"
                  class="playButton"/>
         </div>
     </div>
@@ -55,6 +55,7 @@
         addText = "+Add an account";
         selected = "";
         canPlay = false;
+        disableUi = false;
         showAddAccount = false;
         accounts: string[] = [];
 
@@ -74,7 +75,6 @@
         }
 
         selectChanged() {
-
             let selected: string = this.selected;
             this.canPlay = !(selected == "" || selected == this.addText);
             if (selected == this.addText) {
@@ -132,6 +132,7 @@
             if (!this.canPlay) {
                 return;
             }
+            this.disableUi = true;
             let selected: string = this.selected;
 
             let account = Accounts.getAccountByUsername(selected);
@@ -144,6 +145,7 @@
                     ipcRenderer.send("set-status", "Have fun!");
                     new Promise(resolve => setTimeout(() => resolve(), 1000)).then(() => {
                         ipcRenderer.callMain("start-game", {token: res.token, hostname: 'gs.corporateclash.net', minimize: this.accounts.length >= 2});
+                        this.disableUi = false;
                     });
                 });
             });
