@@ -24,5 +24,6 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EP_PRE_RELEASE: true
           TRAVIS_REPO_SLUG: corporateclash/corporate-clash-launcher
           CI_BUILD_TAG: ${{ github.event.release.tag_name }}
