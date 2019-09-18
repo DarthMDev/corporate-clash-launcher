@@ -1,5 +1,7 @@
 name: publish
-on: release
+on:
+  release:
+      types: [created]
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -10,20 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v1
-        if: github.event.action == 'published'
         with:
           node-version: 12
       - run: npm ci
-        if: github.event.action == 'published'
       - name: Temporarily fix electron-builder
-        if: github.event.action == 'published'
         run: |
           sed -i 's/\^\[\\w/\^\[.\\w/g' node_modules/builder-util/out/util.js
         shell: bash
       - run: |
           npm run release
         shell: bash
-        if: github.event.action == 'published'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRAVIS_REPO_SLUG: corporateclash/corporate-clash-launcher
