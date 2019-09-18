@@ -15,11 +15,16 @@ jobs:
           node-version: 12
       - run: npm ci
         if: github.event.action == 'published'
+      - name: Temporarily fix electron-builder
+        if: github.event.action == 'published'
+        run: |
+          sed -i 's/\^\[\\w/\^\[.\\w/g' node_modules/builder-util/out/util.js
+        shell: bash
       - run: |
-          GH_TOKEN=${PRE_GH_TOKEN:3:43} npm run release
+          npm run release
         shell: bash
         if: github.event.action == 'published'
         env:
-          PRE_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRAVIS_REPO_SLUG: corporateclash/corporate-clash-launcher
           CI_BUILD_TAG: ${{ github.event.release.tag_name }}
