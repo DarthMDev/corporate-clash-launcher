@@ -143,8 +143,12 @@
                 }
                 ipcRenderer.callMain("check-download").then(() => {
                     ipcRenderer.send("set-status", "Have fun!");
-                    new Promise(resolve => setTimeout(() => resolve(), 1000)).then(() => {
-                        ipcRenderer.callMain("start-game", {token: res.token, hostname: 'gs.corporateclash.net', minimize: this.accounts.length >= 2});
+                    ipcRenderer.callMain("start-game", {
+                        token: res.token,
+                        hostname: 'gs.corporateclash.net',
+                        minimize: this.accounts.length >= 2
+                    });
+                    new Promise(resolve => setTimeout(() => resolve(), 2000)).then(() => {
                         this.disableUi = false;
                     });
                 });
