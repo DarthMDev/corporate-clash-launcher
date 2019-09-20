@@ -4,9 +4,11 @@
         <img class="newsBackground" src="../assets/art/misc/news.png"/>
         <div class="newsDiv">
             <ul class="newsUl">
-                <li v-for="(article, index) in articles" v-bind:key="article.id">
-                    <h3 class="articleHeader" v-text="article.title" @click="articleClicked(article.id)"/>
-                    <p><article-date :date="article.posted" /></p>
+                <li v-bind:key="article.id" v-for="(article, index) in articles">
+                    <h3 @click="articleClicked(article.id)" class="articleHeader" v-text="article.title"/>
+                    <p>
+                        <article-date :date="article.posted"/>
+                    </p>
                     <p v-text="article.summary"/>
                     <hr v-if="index + 1 < articles.length">
                 </li>
@@ -16,30 +18,31 @@
 </template>
 
 <script lang="ts">
-    import {ipcRenderer} from 'electron-better-ipc';
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
     import {shell} from 'electron';
     import ArticleDate from "@/components/ArticleDate.vue"
     import Axios from '@/axios'
 
-    export default {
+    @Component({
         name: 'News',
-        components: {ArticleDate},
-        data() {
-            return {
-                articles: []
-            }
+        components: {
+            ArticleDate
         },
-        methods: {
-            articleClicked(id: Number) {
-                shell.openExternalSync(`https://corporateclash.net/news/article/${id}`);
-            }
-        },
+    })
+    export default class News extends Vue {
+        articles = [];
+
+        articleClicked(id: Number) {
+            shell.openExternalSync(`https://corporateclash.net/news/article/${id}`);
+        }
+
         mounted() {
             Axios.get('v1/launcher/news').then(res => {
                 // @ts-ignore
                 this.articles = res.data;
             })
-        },
+        }
     }
 </script>
 

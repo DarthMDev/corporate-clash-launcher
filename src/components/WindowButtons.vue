@@ -1,22 +1,26 @@
 <template>
     <div>
-        <div class="closeButton" @click="closeClicked"/>
-        <div class="minButton" @click="minimizeClicked"/>
+        <div @click="closeClicked" class="closeButton"/>
+        <div @click="minimizeClicked" class="minButton"/>
     </div>
 </template>
 
 <script lang="ts">
-    import { remote } from 'electron'
-    export default {
-        name: 'WindowButtons',
-        methods: {
-            closeClicked() {
-                remote.getCurrentWindow().close()
-            },
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
+    import {remote} from 'electron'
 
-            minimizeClicked() {
-                remote.getCurrentWindow().minimize()
-            }
+    @Component({
+        name: 'WindowButtons',
+    })
+    export default class WindowButtons extends Vue {
+
+        closeClicked() {
+            remote.getCurrentWindow().close()
+        }
+
+        minimizeClicked() {
+            remote.getCurrentWindow().minimize()
         }
     }
 </script>
@@ -61,6 +65,7 @@
         cursor: pointer;
         background-image: url("../assets/art/close_btns/hover.png");
     }
+
     .closeButton:active {
         background-image: url("../assets/art/close_btns/down.png");
     }

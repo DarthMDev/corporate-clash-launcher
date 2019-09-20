@@ -8,20 +8,24 @@
 </template>
 
 <script lang="ts">
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
     import {shell} from 'electron';
 
-    export default {
+    @Component({
         name: 'Buttons',
-        methods: {
-            twitterClicked() {
-                shell.openExternalSync("https://corporateclash.net/social/twitter")
-            },
-            ytClicked() {
-                shell.openExternalSync("https://corporateclash.net/social/youtube")
-            },
-            discordClicked() {
-                shell.openExternalSync("https://corporateclash.net/social/discord")
-            },
+    })
+    export default class Buttons extends Vue {
+        twitterClicked() {
+            shell.openExternalSync("https://corporateclash.net/social/twitter")
+        }
+
+        ytClicked() {
+            shell.openExternalSync("https://corporateclash.net/social/youtube")
+        }
+
+        discordClicked() {
+            shell.openExternalSync("https://corporateclash.net/social/discord")
         }
     }
 </script>

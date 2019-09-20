@@ -1,10 +1,10 @@
 <template>
     <div>
-        <p class="statusText" v-text="statustext" />
-        <div class="progressPos" :hidden="progress <= 0 || progress >= 100">
+        <p class="statusText" v-text="statustext"/>
+        <div :hidden="progress <= 0 || progress >= 100" class="progressPos">
             <div class="progress">
-                <div id="progressBar" class="progressBar"
-                     :style="{'width': `${progress}%`}">
+                <div :style="{'width': `${progress}%`}" class="progressBar"
+                     id="progressBar">
                 </div>
             </div>
         </div>
@@ -12,23 +12,19 @@
 </template>
 
 <script lang="ts">
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
     import {ipcRenderer} from 'electron-better-ipc';
-    import {AxiosResponse} from 'axios'
     import {remote} from "electron";
 
-    export default {
+    @Component({
         name: 'DownloadProgress',
-        computed: {
-        },
-        data() {
-            return {
-                statustext: "Getting ready...",
-                progress: -1,
-            }
-        },
-        methods: {
-        },
-        mounted(): void {
+    })
+    export default class DownloadProgress extends Vue {
+        statustext = "Getting ready...";
+        progress = 1;
+
+        mounted() {
             // @ts-ignore
             ipcRenderer.callMain("populate-manifest").then(() => {
                 // @ts-ignore
