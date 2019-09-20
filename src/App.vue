@@ -1,24 +1,28 @@
 <!--suppress CheckEmptyScriptTag -->
 <template>
     <div id="app">
-        <img v-if="useFlat2" class="bg-img" alt="background image" src="./assets/art/flat_user_password_friendly.png">
-        <img v-else class="bg-img" alt="background image" src="./assets/art/flat_only_username.png">
+        <img alt="background image" class="bg-img" src="./assets/art/flat_user_password_friendly.png" v-if="useFlat2">
+        <img alt="background image" class="bg-img" src="./assets/art/flat_only_username.png" v-else>
         <window-buttons/>
         <login-buttons/>
         <download-progress/>
         <news/>
         <buttons/>
+        <p class="versionBox" v-text="AppVersion"/>
     </div>
 </template>
 
 <script lang="ts">
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
     import WindowButtons from "@/components/WindowButtons.vue";
     import LoginButtons from "@/components/LoginButtons.vue";
     import DownloadProgress from "@/components/DownloadProgress.vue"
     import News from "@/components/News.vue"
     import Buttons from "@/components/Buttons.vue"
+    import {remote} from 'electron';
 
-    export default {
+    @Component({
         name: "App",
         components: {
             Buttons,
@@ -26,21 +30,21 @@
             DownloadProgress,
             LoginButtons,
             WindowButtons
-        },
-        data() {
-            return {
-                useFlat2: false
-            }
-        },
-        methods: {
-            useOldBackground() {
-                // @ts-ignore
-                this.useFlat2 = true;
-            },
-            useRegularBackground() {
-                // @ts-ignore
-                this.useFlat2 = false;
-            }
+        }
+    })
+    export default class App extends Vue {
+        useFlat2 = false;
+
+        get AppVersion() {
+            return 'v' + remote.app.getVersion();
+        }
+
+        useOldBackground() {
+            this.useFlat2 = true;
+        }
+
+        useRegularBackground() {
+            this.useFlat2 = false;
         }
     }
 </script>
@@ -64,6 +68,14 @@
     }
 
 
+    .versionBox {
+        color: lightgray;
+        font-size: 15pt;
+        font-family: 'Impress BT', Fallback, sans-serif;
+        position: absolute;
+        top: 475px;
+        left: 370px;
+    }
     .bg-img {
         position: relative;
         z-index: 0;
