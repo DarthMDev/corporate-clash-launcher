@@ -23,7 +23,7 @@
         </div>
         <div v-else>
             <div class="loginUsername">
-                <select @change="selectChanged" class="loginDropdown" v-model="selected" :enabled="disableUi">
+                <select @change="selectChanged" class="loginDropdown" v-model="selected" :disabled="disableUi">
                     <option></option>
                     <option :key="account" :name="account" v-for="account in accounts" v-text="account"/>
                     <option v-text="addText"/>
@@ -133,6 +133,7 @@
                 return;
             }
             this.disableUi = true;
+            this.canPlay = false;
             let selected: string = this.selected;
 
             let account = Accounts.getAccountByUsername(selected);
@@ -150,6 +151,7 @@
                     });
                     new Promise(resolve => setTimeout(() => resolve(), 2000)).then(() => {
                         this.disableUi = false;
+                        this.canPlay = true;
                     });
                 });
             });
