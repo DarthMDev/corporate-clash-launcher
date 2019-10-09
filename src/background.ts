@@ -11,7 +11,7 @@ import {app, BrowserWindow, protocol} from 'electron';
 import {createProtocol, installVueDevtools} from 'vue-cli-plugin-electron-builder/lib';
 import path from 'path';
 import {Downloader} from "./downloader";
-import {baseDir} from "./constantsMain";
+import {baseDir, baseDirQa} from "./constantsMain";
 import {spawn} from 'child_process';
 
 log.info("Starting Application");
@@ -90,9 +90,9 @@ app.on('ready', async () => {
     log.info("Window ready");
     if (isDevelopment && !process.env.IS_TEST) {
         log.info("Installing devtools");
-        // Install Vue Devtools
+        // NOT installing vue devtools due to it corrupting the chromium cache (i guess)
         try {
-            await installVueDevtools()
+            //installVueDevtools()
         } catch (e) {
             log.error('Vue Devtools failed to install:', e.toString())
         }
@@ -115,20 +115,10 @@ if (isDevelopment) {
     }
 }
 
-// TODO: realms
-let downloader = new Downloader("production");
-log.info(`Base directory: ${baseDir}`);
-downloader.setBaseDirectory(baseDir);
+
 // Begin download handler
 
 log.info("setting up listeners");
-
-ipcMain.answerRenderer('populate-manifest', async () => {
-    log.info("populate-manifest: asked to populate");
-    await downloader.populateManifest();
-    log.info("populate-manifest: awaited successfully");
-    return true
-});
 
 ipcMain.answerRenderer('focus', async () => {
     log.info("focus: asked to focus");
@@ -140,14 +130,27 @@ ipcMain.answerRenderer('focus', async () => {
     return true
 });
 
-ipcMain.answerRenderer('check-download', async () => {
+interface checkDownloadOptions {
+    qa?: boolean,
+    qaUrl?: string,
+}
+
+// @ts-ignore
+ipcMain.answerRenderer('check-download', async (options: checkDownloadOptions) => {
     log.info("check-download: Started download process");
+    let downloader = new Downloader(options.qa ? "qa" : "production");
+    if (options.qa && options.qaUrl) {
+        downloader.setManifestUrl(options.qaUrl);
+    }
+    await downloader.populateManifest();
+    let _basedir = options.qa ? baseDirQa : baseDir;
+    log.info(`Base directory: ${_basedir} qa=${options.qa}`);
+    downloader.setBaseDirectory(_basedir);
     if (win) {
         log.info("check-download: setting download status to checking files");
         ipcMain.callRenderer(win, "set-status", "Checking files...");
     }
     return await downloader.downloadToFolder(async (progress) => {
-        // @ts-ignore
         if (win) {
             ipcMain.callRenderer(win, 'update-progress', progress).catch(() => {
             }).then(() => {
@@ -163,8 +166,8 @@ ipcMain.answerRenderer('check-download', async () => {
 });
 
 // @ts-ignore
-ipcMain.answerRenderer("start-game", async (config: { token: string, hostname: string, minimize: boolean }) => {
-    log.info("start-game: Should start game");
+ipcMain.answerRenderer("start-game", async (config: { token: string, hostname: string, minimize: boolean, qa: boolean }) => {
+    log.info(`start-game: Should start game. qa=${config.qa}`);
     let command;
     switch (process.platform) {
         case "win32":
@@ -181,7 +184,7 @@ ipcMain.answerRenderer("start-game", async (config: { token: string, hostname: s
     }
     log.info("start-game: spawning process");
     let clashProcess = spawn(command, {
-        cwd: baseDir,
+        cwd: config.qa ? baseDirQa : baseDir,
         env: {
             "TT_GAMESERVER": config.hostname,
             "TT_PLAYCOOKIE": config.token,

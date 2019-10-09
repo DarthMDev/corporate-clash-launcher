@@ -55,6 +55,11 @@ export class Downloader {
         this.manifest = this._defaultManifest;
     }
 
+    public changeRealm(realm: string) {
+        this.realm = realm;
+        this.manifest = this._defaultManifest;
+    }
+
     public setBaseDirectory(directory: string) {
         this.directory = directory;
         this.ensureStructure();

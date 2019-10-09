@@ -23,12 +23,11 @@
         </div>
         <div v-else>
             <div class="loginUsername">
-                <select @change="selectChanged" class="loginDropdown" v-model="selected" :disabled="disableUi">
+                <select :disabled="disableUi" @change="selectChanged" class="loginDropdown" v-model="selected">
                     <option></option>
                     <option :key="account" :name="account" v-for="account in accounts" v-text="account"/>
                     <option v-text="addText"/>
-                    <!-- TODO: list accounts -->
-                    <!-- TODO: Dedicated buttons for removing and adding accounts -->
+                    <!-- TODO: Dedicated buttons for removing accounts -->
                 </select>
             </div>
             <div :class="{'playButtonDisabled': !canPlay}" :disabled="disableUi || (!canPlay)" @click="playClicked"
@@ -42,7 +41,7 @@
     import Component from 'vue-class-component';
     import Accounts from '@/authentication';
     import Axios from '@/axios';
-    import {ipcRenderer} from 'electron-better-ipc'
+    import {ipcRenderer} from 'electron-better-ipc';
     import {remote} from 'electron';
 
     @Component({
@@ -54,6 +53,7 @@
         addFriendly: string = "";
         addText = "+Add an account";
         selected = "";
+        canQa = false;
         canPlay = false;
         disableUi = false;
         showAddAccount = false;
@@ -83,6 +83,19 @@
                 // @ts-ignore
                 this.$parent.useOldBackground();
                 this.canPlay = true;
+                return;
+            }
+            if (selected != '') {
+                let account = Accounts.getAccountByUsername(selected);
+                account.metadata().then(res => {
+                    if (res.bad_token) {
+                        Accounts.removeAccountByUsername(account.username);
+                        this.showMessageBox(`Your launcher has been deauthorized for the account ${account.username}.\nYou may re-add it via the add account option.`);
+                        this.selected = '';
+                        return;
+                    }
+                    this.canQa = res.access_qa;
+                });
             }
         }
 
@@ -136,17 +149,21 @@
             this.canPlay = false;
             let selected: string = this.selected;
 
+            // TODO: UI for wantQa
+            let wantQa = false;
+
             let account = Accounts.getAccountByUsername(selected);
-            account.login().then(res => {
+            account.login(wantQa).then(async (res) => {
                 if (!res.status) {
                     this.showMessageBox(res.message);
                     return;
                 }
-                ipcRenderer.callMain("check-download").then(() => {
+                let metadata = await account.metadata();
+                ipcRenderer.callMain("check-download", {qa: wantQa, qaUrl: metadata.qa_manifest_url}).then(() => {
                     ipcRenderer.send("set-status", "Have fun!");
                     ipcRenderer.callMain("start-game", {
                         token: res.token,
-                        hostname: 'gs.corporateclash.net',
+                        hostname: ((wantQa && metadata.access_qa) ? metadata.qa_hostname : 'gs.corporateclash.net'),
                         minimize: this.accounts.length >= 2
                     });
                     new Promise(resolve => setTimeout(() => resolve(), 2000)).then(() => {

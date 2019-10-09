@@ -21,26 +21,18 @@
         name: 'DownloadProgress',
     })
     export default class DownloadProgress extends Vue {
-        statustext = "Getting ready...";
+        statustext = "Ready to go!";
         progress = 1;
 
         mounted() {
             // @ts-ignore
-            ipcRenderer.callMain("populate-manifest").then(() => {
-                // @ts-ignore
-                this.statustext = "Ready to go!";
-            });
-            // @ts-ignore
             ipcRenderer.answerMain("set-status", async (text: string) => {
-                // @ts-ignore
                 this.statustext = text;
                 return true;
             });
             // @ts-ignore
             ipcRenderer.answerMain("update-progress", async (progress: number) => {
-                // @ts-ignore
                 this.statustext = `Downloading: ${progress}%`;
-                // @ts-ignore
                 this.progress = progress;
                 remote.getCurrentWindow().setProgressBar(progress / 100);
                 return true;
