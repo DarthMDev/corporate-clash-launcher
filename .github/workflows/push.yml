@@ -25,8 +25,6 @@ jobs:
       - run: npm run electron:build
         env:
           DISABLE_NOTARIZE: true
-          APPLEID: ${{ secrets.APPLEID }}
-          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
       - uses: actions/upload-artifact@master
         with:
           name: dist_electron-${{ matrix.os }}
