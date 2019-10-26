@@ -19,10 +19,16 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
-      - name: Temporarily fix electron-builder
+      - name: Temporarily fix electron-builder WIN
         run: |
           sed -i 's/\^\[\\w/\^\[.\\w/g' node_modules/builder-util/out/util.js
         shell: bash
+        if: matrix.os == 'windows-latest'
+      - name: Temporarily fix electron-builder MAC
+        run: |
+          sed -i '' 's/\^\[\\w/\^\[.\\w/g' node_modules/builder-util/out/util.js
+        shell: bash
+        if: matrix.os == 'macOS-latest'
       - run: npm run release
         shell: bash
         if: matrix.os == 'macOS-latest'
