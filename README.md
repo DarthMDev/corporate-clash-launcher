@@ -1,4 +1,8 @@
-# Corporate Clash Electron Launcher
+# Archived
+
+We've shifted development to a native, QT-based python app since Electron is too heavyweight for something as simple as a launcher.
+
+## Corporate Clash Electron Launcher
 
 This launcher is meant to ease development by utilizing Vue, Typescript, and vue cli.
 
