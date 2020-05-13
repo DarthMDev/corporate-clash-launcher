@@ -81,7 +81,7 @@
                 this.selected = "";
                 this.showAddAccount = true;
                 // @ts-ignore
-                this.$parent.useOldBackground();
+                this.$emit('wantOldBackground');
                 this.canPlay = true;
                 return;
             }
@@ -138,7 +138,7 @@
         backClicked() {
             this.showAddAccount = false;
             // @ts-ignore
-            this.$parent.useRegularBackground();
+            this.$emit('wantRegularBackground');
         }
 
         playClicked() {

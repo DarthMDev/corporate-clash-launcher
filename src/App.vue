@@ -4,11 +4,12 @@
         <img alt="background image" class="bg-img" src="./assets/art/flat_user_password_friendly.png" v-if="useFlat2">
         <img alt="background image" class="bg-img" src="./assets/art/flat_only_username.png" v-else>
         <window-buttons/>
-        <login-buttons/>
+        <login-buttons @wantOldBackground="useOldBackground" @wantRegularBackground="useRegularBackground"/>
         <download-progress/>
         <news/>
-        <buttons/>
+        <buttons @openSettings="showSettings"/>
         <p class="versionBox" v-text="AppVersion"/>
+        <settings class="settings" v-show="showSettingsToggle" @closeClicked="hideSettings"/>
     </div>
 </template>
 
@@ -21,10 +22,12 @@
     import News from "@/components/News.vue"
     import Buttons from "@/components/Buttons.vue"
     import {remote} from 'electron';
+    import Settings from "@/components/Settings.vue";
 
     @Component({
         name: "App",
         components: {
+            Settings,
             Buttons,
             News,
             DownloadProgress,
@@ -34,6 +37,15 @@
     })
     export default class App extends Vue {
         useFlat2 = false;
+        showSettingsToggle = false;
+
+        showSettings() {
+            this.showSettingsToggle = true;
+        }
+
+        hideSettings() {
+            this.showSettingsToggle = false;
+        }
 
         get AppVersion() {
             return 'v' + remote.app.getVersion();

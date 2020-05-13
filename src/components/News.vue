@@ -46,7 +46,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     p {
         margin-top: 8px;
         margin-bottom: 8px;
@@ -81,25 +81,7 @@
         overflow: auto;
     }
 
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        margin-top: 2px;
-        margin-bottom: 2px;
-        box-shadow: inset 0 0 5px grey;
-        border-radius: 10px;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        margin-top: 2px;
-        margin-bottom: 2px;
-        background: grey;
-        border-radius: 10px;
-    }
+    @import "../mixin-scrollbar";
 
     .newsDiv {
         position: absolute;

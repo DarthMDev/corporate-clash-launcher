@@ -2,6 +2,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 if (!isDevelopment) {
     require("@sentry/node").init({dsn: 'https://6214261e7b08411b89ea13ecf3f864a0@sentry.io/1547181'});
 }
+
 import ClashUpdater from "./ClashUpdater";
 import log from './logger';
 
@@ -13,6 +14,13 @@ import path from 'path';
 import {Downloader} from "./downloader";
 import {baseDir, baseDirQa} from "./constantsMain";
 import {spawn} from 'child_process';
+
+// fix appdata being used for chrome
+let {LOCALAPPDATA} = process.env;
+if (process.platform == "win32" && LOCALAPPDATA) {
+    app.setPath("appData", LOCALAPPDATA);
+    app.setPath("userData", path.join(LOCALAPPDATA, app.getName()));
+}
 
 log.info("Starting Application");
 log.info(`Corporate Clash Launcher v${app.getVersion()}`);

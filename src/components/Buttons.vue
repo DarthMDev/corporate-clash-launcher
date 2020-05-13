@@ -4,6 +4,7 @@
         <div @click="twitterClicked" class="twitterButton"/>
         <div @click="ytClicked" class="ytButton"/>
         <div @click="discordClicked" class="discordButton"/>
+        <div @click="settingsClicked" class="settingsButton"/>
     </div>
 </template>
 
@@ -27,10 +28,27 @@
         discordClicked() {
             shell.openExternalSync("https://corporateclash.net/social/discord")
         }
+
+        settingsClicked() {
+            this.$emit('openSettings')
+        }
     }
 </script>
 
 <style scoped>
+    .settingsButton {
+        position: absolute;
+        bottom: 77px;
+        width: 36px;
+        height: 36px;
+        right: 81px;
+        z-index: 1;
+        -webkit-app-region: no-drag;
+        background-image: url("../assets/art/ext_btns/settings_normal.png");
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+    }
+
     .twitterButton {
         position: absolute;
         bottom: 77px;
@@ -70,6 +88,11 @@
         -webkit-user-drag: none;
     }
 
+    .settingsButton:hover {
+        cursor: pointer;
+        background-image: url("../assets/art/ext_btns/settings_hover.png");
+    }
+
     .twitterButton:hover {
         cursor: pointer;
         background-image: url("../assets/art/ext_btns/twitter_hover.png");
@@ -83,6 +106,11 @@
     .discordButton:hover {
         cursor: pointer;
         background-image: url("../assets/art/ext_btns/discord_hover.png");
+    }
+
+    .settingsButton:active {
+        cursor: pointer;
+        background-image: url("../assets/art/ext_btns/settings_down.png");
     }
 
     .twitterButton:active {
