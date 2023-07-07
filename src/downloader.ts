@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
-import {promises as fsasync} from 'fs-extra';
+import fs from 'fs';
+import {promises as fsasync} from 'fs';
 import path from 'path';
 import Axios from "./axios";
 import crypto from 'crypto';
@@ -89,7 +89,7 @@ export class Downloader {
     }
 
     public async downloadToFolder(callbackProgress: CallbackProgress): Promise<boolean> {
-        let neededFiles: ManifestFile[] = [];
+        const neededFiles: ManifestFile[] = [];
 
         let _files_to_check = this.manifest.files.game.concat(this.manifest.files.resources);
         if (process.platform === 'win32') {
@@ -109,16 +109,16 @@ export class Downloader {
         // Here hte progress will be in decimals where it counts to 1 (not 100)
         // the display will show the output of Math.floor(progress * 100)
         let progressDownloaded = 0;
-        let progressNeeded = neededFiles.length;
+        const progressNeeded = neededFiles.length;
         let _oldprogress = 0;
         let _newprogress = 0;
 
-        let filesFinished = 0;
+        const filesFinished = 0;
 
         if (neededFiles.length === 0) {
             return true;
         }
-        let fnDownload = (file: ManifestFile) => {
+        const fnDownload = (file: ManifestFile) => {
             return this.downloadFile(file, (progressDelta => {
                 _oldprogress = Math.floor((progressDownloaded / progressNeeded) * 100);
 
@@ -150,25 +150,25 @@ export class Downloader {
 
     // This is where we check the file to be in sync with manifest
     private shouldDownloadFile(file: ManifestFile) {
-        let fullPath = this.fullPathToFile(file);
+        const fullPath = this.fullPathToFile(file);
         if (!fs.existsSync(fullPath)) {
             return true;
         }
         // hash the real file on the system
-        let existing_hash = md5file.sync(fullPath);
+        const existing_hash = md5file.sync(fullPath);
         return existing_hash !== file.hash;
     }
 
     private async downloadFile(file: ManifestFile, addToProgress: _CallbackProgressDelta): Promise<boolean> {
-        let fullPath = this.fullPathToFile(file);
+        const fullPath = this.fullPathToFile(file);
 
         // md5String is basically a salt for the GH filenames
-        let md5String = 'TTCC-RELEASE-OBJECT-';
-        let ghName = crypto.createHash('md5').update(md5String + file.file).digest('hex');
+        const md5String = 'TTCC-RELEASE-OBJECT-';
+        const ghName = crypto.createHash('md5').update(md5String + file.file).digest('hex');
 
         let lastProgress = 0;
         // @ts-ignore
-        let resp = await got.get(`${this.manifest.base}${ghName}`, {encoding: null}).on('downloadProgress', progress => {
+        const resp = await got.get(`${this.manifest.base}${ghName}`, {encoding: null}).on('downloadProgress', progress => {
             addToProgress(progress.percent - lastProgress);
             lastProgress = progress.percent;
         });

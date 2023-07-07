@@ -141,12 +141,12 @@ interface checkDownloadOptions {
 // @ts-ignore
 ipcMain.answerRenderer('check-download', async (options: checkDownloadOptions) => {
     log.info("check-download: Started download process");
-    let downloader = new Downloader(options.qa ? "qa" : "production");
+    const downloader = new Downloader(options.qa ? "qa" : "production");
     if (options.qa && options.qaUrl) {
         downloader.setManifestUrl(options.qaUrl);
     }
     await downloader.populateManifest();
-    let _basedir = options.qa ? baseDirQa : baseDir;
+    const _basedir = options.qa ? baseDirQa : baseDir;
     log.info(`Base directory: ${_basedir} qa=${options.qa}`);
     downloader.setBaseDirectory(_basedir);
     if (win) {
@@ -186,7 +186,7 @@ ipcMain.answerRenderer("start-game", async (config: { token: string, hostname: s
             command = "Corporate Clash";
     }
     log.info("start-game: spawning process");
-    let clashProcess = spawn(command, {
+    const clashProcess = spawn(command, {
         cwd: config.qa ? baseDirQa : baseDir,
         env: {
             "TT_GAMESERVER": config.hostname,

@@ -1,4 +1,36 @@
+const crypto = require('crypto');
+/**
+ * The  The MD4 algorithm is not available anymore in Node.js 17.0.0 and above.
+ * Replace it with the MD5 algorithm.
+ * 
+ */
+try {
+  crypto.createHash('md4');
+
+} catch (err) {
+  console.warn('The MD4 algorithm is not available anymore in Node.js 17.0.0 and above. Replacing it with the MD5 algorithm.');
+  const originalCreateHash = crypto.createHash;
+  crypto.createHash = (algorithm, options) => {
+    if (algorithm === 'md4') {
+      return originalCreateHash('md5', options);
+    }
+    return originalCreateHash(algorithm, options);
+  }
+}
+
 module.exports = {
+  configureWebpack: {
+    resolve: {
+      fallback: {
+        "stream": require.resolve("stream-browserify"),
+        "constants": require.resolve("constants-browserify"),
+        "os": require.resolve("os-browserify/browser"),
+        "crypto": require.resolve("crypto-browserify"),
+        "fs": require.resolve("browserify-fs")
+    }
+  }
+  },
+  
   lintOnSave: false,
   pluginOptions: {
     electronBuilder: {
@@ -34,3 +66,5 @@ module.exports = {
     }
   }
 }
+
+

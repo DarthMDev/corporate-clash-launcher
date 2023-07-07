@@ -3,7 +3,7 @@ import {app} from 'electron';
 import {isRenderer} from "./helpers";
 import {ipcMain, ipcRenderer} from "electron-better-ipc";
 
-let headers: { [name: string]: string } = {};
+const headers: { [name: string]: string } = {};
 
 class OurAxios {
     isRender = false;
@@ -45,7 +45,7 @@ class OurAxios {
     }
 }
 
-let OurAxiosInstance = new OurAxios();
+const OurAxiosInstance = new OurAxios();
 
 if (!isRenderer()) {
     // @ts-ignore
