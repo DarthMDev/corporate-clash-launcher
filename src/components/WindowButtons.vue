@@ -6,9 +6,7 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
-    import {remote} from 'electron'
+    import { Component, Vue } from 'vue-facing-decorator'
 
     @Component({
         name: 'WindowButtons',
@@ -16,11 +14,11 @@
     export default class WindowButtons extends Vue {
 
         closeClicked() {
-            remote.getCurrentWindow().close()
+            require("@electron/remote").getCurrentWindow().close()
         }
 
         minimizeClicked() {
-            remote.getCurrentWindow().minimize()
+            require("@electron/remote").getCurrentWindow().minimize()
         }
     }
 </script>

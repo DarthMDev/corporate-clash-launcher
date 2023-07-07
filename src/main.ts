@@ -5,13 +5,14 @@ if (!isDevelopment) {
 }
 
 import _ from 'lodash';
-import Vue from 'vue'
+import { createApp } from 'vue' 
 import App from './App.vue'
-import store from './store'
+import { createPinia } from 'pinia'
 
-Vue.config.productionTip = false;
+// import the store from the store.ts file
+import { useStore} from './store'
 
-new Vue({
-  store,
-  render: h => h(App)
-}).$mount('#app');
+// create the app and pass the store to it
+const app = createApp(App)
+app.use(createPinia())
+app.mount('#app')

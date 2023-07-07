@@ -18,8 +18,7 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
+    import { Component, Vue } from 'vue-facing-decorator'
     import {shell} from 'electron';
     import ArticleDate from "@/components/ArticleDate.vue"
     import Axios from '@/axios'
@@ -34,7 +33,7 @@
         articles = [];
 
         articleClicked(id: Number) {
-            shell.openExternalSync(`https://corporateclash.net/news/article/${id}`);
+            shell.openExternal(`https://corporateclash.net/news/article/${id}`);
         }
 
         mounted() {

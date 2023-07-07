@@ -1,6 +1,6 @@
-import ElectronStore from "electron-store";
 import Axios from "./axios";
-
+const ElectronStore = require('electron-store');
+const store = new ElectronStore();
 interface loginResponse {
     status: boolean,
     toonstep: boolean,
@@ -53,24 +53,22 @@ class Account {
 
 
 }
-
 export class Accounts {
-    store: ElectronStore<unknown>;
     accountList: Account[];
 
     constructor() {
-        this.store = new ElectronStore({
+        store({
             name: "accounts",
             fileExtension: "json",
         });
         this.accountList = [];
         // @ts-ignore
-        this.store.get("accounts", []).forEach(accountData => {
+        store.get("accounts", []).forEach(accountData => {
             this.accountList.push(new Account(accountData.username, accountData.token));
         });
     }
     _saveAccounts() {
-        this.store.set('accounts', this.accountList);
+        store.set('accounts', this.accountList);
     }
 
     getAccountByUsername(username: string): Account {

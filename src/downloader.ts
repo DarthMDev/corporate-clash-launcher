@@ -1,5 +1,5 @@
-import fs from 'fs';
-import {promises as fsasync} from 'fs';
+import fs from 'fs-extra';
+import {promises as fsasync} from 'fs-extra';
 import path from 'path';
 import Axios from "./axios";
 import crypto from 'crypto';

@@ -14,7 +14,9 @@
     "baseUrl": ".",
     "incremental": false,
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "node",
+      "vue"
     ],
     "paths": {
       "@/*": [

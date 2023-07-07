@@ -12,10 +12,8 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
+    import { Component, Vue } from 'vue-facing-decorator'
     import {ipcRenderer} from 'electron-better-ipc';
-    import {remote} from "electron";
 
     @Component({
         name: 'DownloadProgress',
@@ -34,7 +32,7 @@
             ipcRenderer.answerMain("update-progress", async (progress: number) => {
                 this.statustext = `Downloading: ${progress}%`;
                 this.progress = progress;
-                remote.getCurrentWindow().setProgressBar(progress / 100);
+                require("@electron/remote").getCurrentWindow().setProgressBar(progress / 100);
                 return true;
             });
         }

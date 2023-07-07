@@ -8,8 +8,7 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
+    import { Component, Vue } from 'vue-facing-decorator'
     import {shell} from 'electron';
 
     @Component({
@@ -17,15 +16,15 @@
     })
     export default class Buttons extends Vue {
         twitterClicked() {
-            shell.openExternalSync("https://corporateclash.net/social/twitter")
+            shell.openExternal("https://corporateclash.net/social/twitter")
         }
 
         ytClicked() {
-            shell.openExternalSync("https://corporateclash.net/social/youtube")
+            shell.openExternal("https://corporateclash.net/social/youtube")
         }
 
         discordClicked() {
-            shell.openExternalSync("https://corporateclash.net/social/discord")
+            shell.openExternal("https://corporateclash.net/social/discord")
         }
     }
 </script>

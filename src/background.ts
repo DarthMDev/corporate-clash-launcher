@@ -2,6 +2,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 if (!isDevelopment) {
     require("@sentry/node").init({dsn: 'https://6214261e7b08411b89ea13ecf3f864a0@sentry.io/1547181'});
 }
+require('@electron/remote/main').initialize()
 import ClashUpdater from "./ClashUpdater";
 import log from './logger';
 
@@ -93,8 +94,10 @@ app.on('ready', async () => {
         // NOT installing vue devtools due to it corrupting the chromium cache (i guess)
         try {
             //installVueDevtools()
-        } catch (e) {
-            log.error('Vue Devtools failed to install:', e.toString())
+        } catch (e ) {
+            if (e instanceof Error) {
+                log.error('Vue Devtools failed to install:', e.message);
+            }
         }
     }
     createWindow()

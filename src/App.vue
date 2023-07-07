@@ -13,14 +13,12 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
+    import { Component, Vue } from 'vue-facing-decorator'
     import WindowButtons from "@/components/WindowButtons.vue";
     import LoginButtons from "@/components/LoginButtons.vue";
     import DownloadProgress from "@/components/DownloadProgress.vue"
     import News from "@/components/News.vue"
     import Buttons from "@/components/Buttons.vue"
-    import {remote} from 'electron';
 
     @Component({
         name: "App",
@@ -36,7 +34,7 @@
         useFlat2 = false;
 
         get AppVersion() {
-            return 'v' + remote.app.getVersion();
+            return 'v' + require("@electron/remote").app.getVersion();
         }
 
         useOldBackground() {

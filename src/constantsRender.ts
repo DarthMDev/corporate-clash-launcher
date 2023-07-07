@@ -1,5 +1,4 @@
-import {remote} from 'electron';
 
-export let isTest = remote.process.env.IS_TEST;
+export let isTest = require("@electron/remote").process.env.IS_TEST;
 
-export let version = remote.app.getVersion();
+export let version = require("@electron/remote").app.getVersion();

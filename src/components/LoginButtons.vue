@@ -37,12 +37,10 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
+    import { Component, Vue } from 'vue-facing-decorator'
     import Accounts from '@/authentication';
     import Axios from '@/axios';
     import {ipcRenderer} from 'electron-better-ipc';
-    import {remote} from 'electron';
 
     @Component({
         name: "LoginButtons",
@@ -100,7 +98,7 @@
         }
 
         showMessageBox(message: string) {
-            remote.dialog.showMessageBox({
+            require("@electron/remote").dialog.showMessageBox({
                 title: "Corporate Clash Launcher",
                 message: message,
             }).then(() => {
@@ -166,7 +164,7 @@
                         hostname: ((wantQa && metadata.access_qa) ? metadata.qa_hostname : 'gs.corporateclash.net'),
                         minimize: this.accounts.length >= 2
                     });
-                    new Promise(resolve => setTimeout(() => resolve(), 2000)).then(() => {
+                    new Promise<void>(resolve => setTimeout(() => resolve(), 2000)).then(() => {
                         this.disableUi = false;
                         this.canPlay = true;
                     });

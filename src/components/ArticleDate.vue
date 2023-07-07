@@ -4,8 +4,9 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import Component from 'vue-class-component'
+  import { Component, Vue } from 'vue-facing-decorator'
+
+  // create a decorator
 
   @Component({
     name: "ArticleDate",
@@ -13,7 +14,7 @@
       date: String,
     }
   })
-  export default class ArticleDate extends Vue {
+  class ArticleDate extends Vue {
     convertToLocalDate (isoDate) {
       let dateObj
       try {
@@ -31,6 +32,7 @@
       }
     }
   }
+  export default ArticleDate
 </script>
 
 <style scoped>

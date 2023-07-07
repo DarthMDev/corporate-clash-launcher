@@ -19,7 +19,12 @@ module.exports = {
           "entitlements": "build/entitlements.mac.plist",
           "entitlementsInherit": "build/entitlements.mac.plist",
           "hardenedRuntime": true,
-          "gatekeeperAssess": false
+          "gatekeeperAssess": false,
+          // target universal2 
+          arch : [
+            "arm64",
+            "x86_64"
+          ]
         },
         "publish": {
           "provider": "github",

@@ -1,6 +1,6 @@
 // source: https://github.com/jprichardson/is-electron-renderer/blob/master/index.js
 import path from "path";
-import fs from "fs";
+import fs from "fs-extra";
 
 export function isRenderer() {
     // running in a web browser
