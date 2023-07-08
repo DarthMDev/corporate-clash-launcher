@@ -53,9 +53,13 @@ module.exports = {
           "hardenedRuntime": true,
           "gatekeeperAssess": false,
           // target universal2 
-          arch : [
-            "arm64",
-            "x86_64"
+          "target": [
+            {
+              "target": "mas",
+              "arch": [
+                "universal"
+              ]
+            }
           ]
         },
         "publish": {
