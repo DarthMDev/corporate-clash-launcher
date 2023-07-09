@@ -16,7 +16,7 @@ import {baseDir, baseDirQa} from "./constantsMain";
 import {spawn} from 'child_process';
 
 log.info("Starting Application");
-log.info(`Corporate Clash Launcher v${app.getVersion()}`);
+// log.info(`Corporate Clash Launcher v${app.getVersion()}`);
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
@@ -37,7 +37,8 @@ function createWindow() {
         icon: path.join(__dirname, 'assets/icons/png/512x512.png'),
         webPreferences: {
             webSecurity: false,
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false
         }
     });
 
@@ -88,6 +89,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+
     log.info("Window ready");
     if (isDevelopment && !process.env.IS_TEST) {
         log.info("Installing devtools");

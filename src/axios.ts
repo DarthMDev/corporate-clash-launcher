@@ -1,10 +1,9 @@
 import Axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
-import {app} from 'electron';
+// import {app} from 'electron';
 import {isRenderer} from "./helpers";
 import {ipcMain, ipcRenderer} from "electron-better-ipc";
-
 const headers: { [name: string]: string } = {};
-
+const app = require("@electron/remote/main").app;
 class OurAxios {
     isRender = false;
     _internalAxios: AxiosInstance;
@@ -16,7 +15,8 @@ class OurAxios {
             this.isRender = true;
         }
         else {
-            headers["User-Agent"] = `Mozilla/5.0 CorporateClashLauncher/${app.getVersion()}`;
+            // headers["User-Agent"] = `Mozilla/5.0 CorporateClashLauncher/${app.getVersion()}`;
+            headers["User-Agent"] = `Mozilla/5.0 CorporateClashLauncher/`;
             this._internalAxios = Axios.create({
                 headers: headers,
                 timeout: 10000,
@@ -49,13 +49,14 @@ const OurAxiosInstance = new OurAxios();
 
 if (!isRenderer()) {
     // @ts-ignore
+
     ipcMain.answerRenderer('get-axios', async (config: {uri: string, config?: AxiosRequestConfig}) => {
         return await OurAxiosInstance.get(config.uri, config.config)
-    });
-    // @ts-ignore
+      });
+
     ipcMain.answerRenderer('post-axios', async (config: {uri: string, data?: any, config?: AxiosRequestConfig}) => {
         return await OurAxiosInstance.post(config.uri, config.data, config.config)
-    });
+      });
 }
 
 

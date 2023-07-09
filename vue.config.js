@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const webpack = require('webpack');
 /**
  * The  The MD4 algorithm is not available anymore in Node.js 17.0.0 and above.
  * Replace it with the MD5 algorithm.
@@ -20,13 +21,23 @@ try {
 
 module.exports = {
   configureWebpack: {
+    plugins : [
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+        process: 'process/browser',
+      
+      }),
+    ],
     resolve: {
       fallback: {
         "stream": require.resolve("stream-browserify"),
         "constants": require.resolve("constants-browserify"),
         "os": require.resolve("os-browserify/browser"),
         "crypto": require.resolve("crypto-browserify"),
-        "fs": require.resolve("browserify-fs")
+        "fs": require.resolve("browserify-fs"),
+        "buffer": require.resolve("buffer"),
+        "process": require.resolve("process"),
+        
     }
   }
   },
@@ -34,10 +45,11 @@ module.exports = {
   lintOnSave: false,
   pluginOptions: {
     electronBuilder: {
+      nodeIntegration: true,
       builderOptions: {
         "afterSign": "build/notarize.js",
         "appId": "net.corporateclash.mac",
-        "productName": "Toontown: Corporate Clash",
+        "productName": "Toontown Corporate Clash",
         "copyright": "Copyright © 2019 Corporate Clash",
         "win": {
           "target": "nsis",
